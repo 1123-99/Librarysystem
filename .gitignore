@@ -1,0 +1,31 @@
+# Ignore Visual Studio temporary and build files
+.vs/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Build directories
+build/
+/bin/
+/Debug/
+/Release/
+x64/
+
+# CMake files
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+Makefile
+
+# Executables and object files
+*.exe
+*.out
+*.o
+*.obj
+*.lib
+*.dll
+*.a
+
+# macOS
+.DS_Store

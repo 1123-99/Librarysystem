@@ -1,52 +1,53 @@
 #ifndef BOOK_H
 #define BOOK_H
-#include <iostream>
+
 #include <string>
-#include <cctype>
-using namespace std;
+#include <iostream>
 
-class Book
-{
+class Book {
 private:
-    string bookName;
-    string isbn;
-    string press;
-    double price;
-    int pages;
-    bool isAvailable;
-    bool isIsbnValid;
+    std::string title_;
+    std::string isbn_;
+    std::string press_;
+    double price_;
+    int pages_;
+    bool available_;
+    bool isbnValid_;
 
-    bool verifyIsbn(string isbn_)
-    {
-        for (int i = 0; i < isbn_.size(); i++)
-        {
-            if (!isdigit(isbn_[i]))
-            {
-                return false;
-            }
-        }
-        return true;
-    }
+    // 辅助函数实现放在 cpp 中
+    static std::string sanitize(const std::string& s);
 
 public:
     Book();
-    Book(string name, string isbn_, string press_, double price_, int pages_, bool avail);
+    Book(const std::string& title,
+         const std::string& isbn,
+         const std::string& press,
+         double price,
+         int pages,
+         bool available = true);
 
-    void setBookName(string name);
-    void setIsbn(string isbn_);
-    void setPress(string press_);
-    void setPrice(double price_);
-    void setPages(int pages_);
-    void setAvailable(bool avail);
+    // setters
+    void setTitle(const std::string& title);
+    void setISBN(const std::string& isbn);
+    void setPress(const std::string& press);
+    void setPrice(double price);
+    void setPages(int pages);
+    void setAvailable(bool available);
 
-    string getBookName();
-    string getIsbn();
-    string getPress();
-    double getPrice();
-    int getPages();
-    bool getAvailable();
+    // getters
+    const std::string& getTitle() const;
+    const std::string& getISBN() const;
+    const std::string& getPress() const;
+    double getPrice() const;
+    int getPages() const;
+    bool isAvailable() const;
+    bool isISBNValid() const;
 
-    void showInfo();
+    // 输出
+    void showInfo(std::ostream& os = std::cout) const;
+
+    // 静态校验函数
+    static bool isValidISBN(const std::string& isbn);
 };
 
-#endif
+#endif // BOOK_H

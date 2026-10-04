@@ -1,39 +1,35 @@
 #include <iostream>
 #include "book.h"
-#include <cstdlib>
-using namespace std;
+#include "student.h"
 
-int main()
-{
-    Book b1;
-    cout << "¶ÔÏób1£¨Ä¬ÈÏ¹¹Ôì£©£º" << endl;
-    b1.showInfo();
+int main() {
+    std::cout << "=== Book ç±»ä¸Ž Student å€Ÿä¹¦ç¤ºä¾‹ ===\n\n";
 
-    cout << "\n------------------------------------\n";
+    Book b1("C++ Primer", "978-7-115-54747-1", "äººæ°‘é‚®ç”µå‡ºç‰ˆç¤¾", 59.8, 380, true);
+    Book b2("ç»å…¸ç‰©ç†å­¦", "0306406152", "ç§‘å­¦å‡ºç‰ˆç¤¾", 45.0, 320, true);
+    Book b3("é”™è¯¯ISBNç¤ºä¾‹", "123abc456", "æ— åå‡ºç‰ˆç¤¾", 10.0, 100, true);
 
-    Book b2("C++ÃæÏò¶ÔÏó³ÌÐòÉè¼Æ", "9787115547471", "ÈËÃñÓÊµç³ö°æÉç", 59.8, 380, true);
-    cout << "¶ÔÏób2£¨ÖØÔØ¹¹Ôì£©£º" << endl;
-    b2.showInfo();
+    b1.showInfo(); std::cout << "----------\n";
+    b2.showInfo(); std::cout << "----------\n";
+    b3.showInfo(); std::cout << "----------\n";
 
-    cout << "\n------------------------------------\n";
+    std::cout << "å°† b3 çš„ ISBN ä¿®æ”¹ä¸ºåˆæ³• ISBN-10: 0306406152\n";
+    b3.setISBN("0306406152");
+    b3.showInfo();
+    std::cout << "==========\n\n";
 
-    cout << "²âÊÔÐÞ¸Äb2µÄ¼Û¸ñÎª¸ºÊý(-100):" << endl;
-    b2.setPrice(-100);
-    cout << "²âÊÔÐÞ¸Äb2×´Ì¬Îª²»¿É½è£º" << endl;
-    b2.setAvailable(false);
+    Student s("å¼ ä¸‰", "2026001");
+    std::cout << "å¼ ä¸‰å°è¯•å€Ÿ b1\n";
+    bool ok = s.borrowBook(b1);
+    std::cout << (ok ? "å€Ÿä¹¦æˆåŠŸ\n" : "å€Ÿä¹¦å¤±è´¥\n");
+    std::cout << "b1 åœ¨é¦†çŠ¶æ€: " << (b1.isAvailable() ? "å¯å€Ÿ" : "å·²å€Ÿå‡º") << "\n";
+    s.listBorrowed();
+    std::cout << "----------\n";
 
-    cout << "\nÐÞ¸ÄÖ®ºób2ÐÅÏ¢£º" << endl;
-    b2.showInfo();
+    std::cout << "å¼ ä¸‰å½’è¿˜ b1\n";
+    if (s.returnBook(b1)) std::cout << "å½’è¿˜æˆåŠŸ\n"; else std::cout << "å½’è¿˜å¤±è´¥\n";
+    std::cout << "b1 åœ¨é¦†çŠ¶æ€: " << (b1.isAvailable() ? "å¯å€Ÿ" : "å·²å€Ÿå‡º") << "\n";
+    s.listBorrowed();
 
-    cout << "\n------------------------------------\n";
-
-    cout << "b2ÊéÃû£º" << b2.getBookName() << endl;
-    cout << "b2 ISBN£º" << b2.getIsbn() << endl;
-
-    cout << "\n²âÊÔÉèÖÃ·Ç·¨ISBN£º" << endl;
-    b2.setIsbn("123abc456");
-    b2.showInfo();
-
-    system("pause");
     return 0;
 }
