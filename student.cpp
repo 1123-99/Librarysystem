@@ -1,8 +1,17 @@
 #include "student.h"
 #include <algorithm>
 
-Student::Student() : name_(""), id_("") {}
-Student::Student(const std::string& name, const std::string& id) : name_(name), id_(id) {}
+Student::Student() : name_(""), id_("") {
+    std::cout << "Student default ctor" << std::endl;
+}
+
+Student::Student(const std::string& name, const std::string& id) : name_(name), id_(id) {
+    std::cout << "Student ctor: " << name_ << std::endl;
+}
+
+Student::~Student() {
+    std::cout << "Destructing Student: " << name_ << std::endl;
+}
 
 const std::string& Student::getName() const { return name_; }
 const std::string& Student::getId() const { return id_; }
@@ -10,7 +19,9 @@ const std::string& Student::getId() const { return id_; }
 bool Student::borrowBook(Book& book) {
     if (!book.isAvailable()) return false;
     book.setAvailable(false);
+    // 保存一份副本到学生内部（组合）
     borrowed_.push_back(book);
+    std::cout << "Book copied into Student (composition): " << book.getTitle() << std::endl;
     return true;
 }
 
@@ -21,6 +32,7 @@ bool Student::returnBook(Book& book) {
     if (it == borrowed_.end()) return false;
     book.setAvailable(true);
     borrowed_.erase(it);
+    std::cout << "Book returned and removed from Student: " << book.getTitle() << std::endl;
     return true;
 }
 

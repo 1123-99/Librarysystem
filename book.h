@@ -26,6 +26,11 @@ public:
          int pages,
          bool available = true);
 
+    // 拷贝/移动/析构，用于观察生命周期
+    Book(const Book& other);
+    Book(Book&& other) noexcept;
+    ~Book();
+
     // setters
     void setTitle(const std::string& title);
     void setISBN(const std::string& isbn);

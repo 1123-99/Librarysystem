@@ -60,7 +60,9 @@ std::string Book::sanitize(const std::string& s) {
 }
 
 Book::Book()
-    : title_("未命名图书"), isbn_(""), press_("未知出版社"), price_(0.0), pages_(0), available_(true), isbnValid_(false) {}
+    : title_("未命名图书"), isbn_(""), press_("未知出版社"), price_(0.0), pages_(0), available_(true), isbnValid_(false) {
+    std::cout << "Book ctor: " << title_ << std::endl;
+}
 
 Book::Book(const std::string& title,
            const std::string& isbn,
@@ -72,6 +74,21 @@ Book::Book(const std::string& title,
     setPrice(price);
     setPages(pages);
     setISBN(isbn);
+    std::cout << "Book ctor: " << title_ << std::endl;
+}
+
+Book::Book(const Book& other)
+    : title_(other.title_), isbn_(other.isbn_), press_(other.press_), price_(other.price_), pages_(other.pages_), available_(other.available_), isbnValid_(other.isbnValid_) {
+    std::cout << "Book copy ctor: " << title_ << std::endl;
+}
+
+Book::Book(Book&& other) noexcept
+    : title_(std::move(other.title_)), isbn_(std::move(other.isbn_)), press_(std::move(other.press_)), price_(other.price_), pages_(other.pages_), available_(other.available_), isbnValid_(other.isbnValid_) {
+    std::cout << "Book move ctor: " << title_ << std::endl;
+}
+
+Book::~Book() {
+    std::cout << "Book destroyed: " << title_ << std::endl;
 }
 
 void Book::setTitle(const std::string& title) { title_ = title; }

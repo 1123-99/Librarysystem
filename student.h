@@ -16,6 +16,11 @@ private:
 public:
     Student();
     Student(const std::string& name, const std::string& id);
+    ~Student();
+
+    // 禁用拷贝以便观察显式拷贝（可按需启用）
+    Student(const Student&) = delete;
+    Student& operator=(const Student&) = delete;
 
     const std::string& getName() const;
     const std::string& getId() const;
