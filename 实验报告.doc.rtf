@@ -1,0 +1,125 @@
+{\rtf1\ansi\deff0
+{\fonttbl{\f0\fnil\fcharset134 SimSun;}{\f1\fswiss Helvetica;}}
+\viewkind4\uc1\pard\f0\fs20\lang2052\b 《面向对象程序设计（C++）》设计报告\b0\par
+\par
+\b 实验名称：\b0 组合、依赖关系\tab \b 项目名称：\b0 Librarysystem\par
+\b 学号：\b0 __________\tab \b 姓名：\b0 __________\tab \b 专业班级：\b0 __________\par
+\b 教师评语：\b0 \par
+\par
+\b 一、实验目标\b0\par
+1. 掌握面向对象三大特性（封装、继承、多态）在 C++ 中的具体应用，重点练习封装与组合/依赖关系的实现。\par
+2. 熟练使用 C++ 类与对象，按多文件组织工程：类声明（.h）、类定义（.cpp）、对象生成与测试（main.cpp）。\par
+3. 培养系统分析能力和模块化设计思维，提升调试技能与异常处理能力。\par
+\par
+\b 二、实验环境\b0\par
+操作系统：Windows 10 / Ubuntu 22.04（任选其一，按实际填写）\par
+开发工具：Visual Studio 2022 / VS Code + GCC（按实际填写）\par
+版本控制：Git（仓库地址：https://github.com/1123-99/Librarysystem）\par
+\par
+\b 三、系统设计\b0\par
+1. 需求分析（200字内）\par
+功能需求：\par
+- 管理图书信息（书名、ISBN、出版社、价格、页数、在馆状态）。\par
+- 验证 ISBN 合法性（支持 ISBN-10 与 ISBN-13）。\par
+- 学生借还图书功能：借书修改馆藏状态，学生记录其借阅的图书（组合关系）。\par
+- 能在控制台展示图书信息与借阅状态，便于调试观测（含构造/析构日志）。\par
+- 代码组织为多文件工程，便于在 IDE 中打开、编译与调试。\par
+数据存储：内存存储（本实验不实现持久化），可扩展为文件或数据库存储以实现持久化。\par
+\par
+2. 类图设计（请在实验报告中附上使用绘图工具绘制的 UML 类图图片）\par
+（提交说明）本报告仅列出类与主要成员，实际提交时请在 Word 文档中插入用 PlantUML 或 Visio 绘制的类图图片：Book、Student 及其关系（组合 has-a、依赖 borrowBook(Book&))。\par
+\par
+说明关键类设计理由：\par
+- Book：表示馆藏图书，封装图书数据与 ISBN 校验逻辑，数据成员均设为 private，提供受控接口（set/get）保证数据合法性。\par
+- Student：保存学生信息与已借图书集合（std::vector<Book>），借书函数以 Book& 作为参数体现依赖关系；将 Book 的副本存入 borrowed_ 体现组合（has-a），副本随 Student 生命周期而存在/消亡。\par
+\par
+3. 流程图设计\par
+（说明）选择 borrowBook 为关键函数绘制流程图，要求在提交文件中提供图片。流程要点：检查 book.isAvailable() -> 若可借 修改外部 book 状态 -> 将 book 副本 push_back 到 borrowed_ -> 返回成功。\par
+\par
+\b 四、核心代码实现\b0\par
+1. 关键类定义（摘录，完整代码见仓库）\par
+\f1\ulcpp\par
+// Book 类（摘录）\par
+class Book {\par
+private:\par
+    std::string title_;\par
+    std::string isbn_;\par
+    std::string press_;\par
+    double price_;\par
+    int pages_;\par
+    bool available_;\par
+    bool isbnValid_;\par
+public:\par
+    Book();\par
+    Book(const std::string& title, const std::string& isbn, const std::string& press, double price, int pages, bool available=true);\par
+    // 拷贝/移动/析构用于调试观察生命周期\par
+    Book(const Book& other);\par
+    Book(Book&& other) noexcept;\par
+    ~Book();\par
+    void setISBN(const std::string& isbn);\par
+    bool isAvailable() const;\par
+    void showInfo(std::ostream& os = std::cout) const;\par
+};\par
+\par
+// Student 类（摘录）\par
+class Student {\par
+private:\par
+    std::string name_;\par
+    std::string id_;\par
+    std::vector<Book> borrowed_; // 组合 has-a\par
+public:\par
+    Student(const std::string& name, const std::string& id);\par
+    bool borrowBook(Book& book); // 依赖 Book&\par
+    bool returnBook(Book& book);\par
+    void listBorrowed(std::ostream& os = std::cout) const;\par
+};\par
+\f0\par
+
+2. 特色功能实现（包含 STL 容器示例）\par
+- 使用 std::vector<Book> 存储学生的已借图书；借书时调用 borrowed_.push_back(book) 触发 Book 的拷贝构造（可在拷贝构造中打印日志以观察）。\par
+\par
+示例函数（摘录）：\par
+\f1\ulcpp\par
+bool Student::borrowBook(Book& book) {\par
+    if (!book.isAvailable()) return false;\par
+    book.setAvailable(false);\par
+    borrowed_.push_back(book); // vector 使用示例\par
+    return true;\par
+}\par
+\f0\par
+\par
+\b 五、测试与调试\b0\par
+1. 测试用例设计（示例表格）\par
+测试功能\tab 输入数据\tab 预期输出\tab 实际结果\tab 是否通过\par
+添加图书\tab {"C++ Primer","978-7-115-54747-1"}\tab 图书信息正确保存\tab 如预期\tab √\par
+ISBN 校验\tab "0306406152"\tab 合法（ISBN-10）\tab 如预期\tab √\par
+借书操作\tab 学生张三借 C++ Primer\tab 外部 Book 可借状态变为已借，学生 borrowed_ 数量+1\tab 如预期\tab √\par
+归还操作\tab 学生归还 C++ Primer\tab 外部 Book 在馆状态恢复，可借，学生 borrowed_ 数量-1\tab 如预期\tab √\par
+\par
+2. 调试记录（给出典型错误与解决方法）\par
+- 编译错误示例1：头文件中使用 "using namespace std;" 导致符号歧义。\par
+  解决：删除头文件中的 using 声明，改用 std:: 前缀或在实现文件中使用 using。\par
+- 编译错误示例2：getter 未标注 const 导致常量对象无法调用。\par
+  解决：把 getter 声明为 const，例如 const std::string& getTitle() const;\par
+- 运行时错误示例：中文输出乱码（Windows 控制台）。\par
+  解决：将源文件保存为 UTF-8 编码，或在 Windows 控制台执行 chcp 65001 并选择支持中文的字体。\par
+\par
+调试工具（建议）：Visual Studio / gdb / VS Code 调试器。请在报告中附上断点调试截图（含时间戳以示为个人调试记录）。\par
+\par
+\b 六、实验总结\b0\par
+1. 个人收获（示例）\par
+- 理解并实践了面向对象编程中封装与组合的语义，掌握了在 C++ 中使用 std::vector 保存对象副本时的拷贝构造与生命周期细节。\par
+- 学会实现并验证 ISBN-10 与 ISBN-13 的校验算法，熟悉字符串预处理（去除连字符/空格）与校验位算法。\par
+- 提升了多文件工程的组织能力，理解头文件/实现文件分离在编译依赖与重编译开销方面的优势。\par
+2. 待改进问题与改进思路\par
+- 当前学生借阅保存为 Book 副本（组合）；如需更真实的馆藏共享对象，应改为保存引用或智能指针（std::shared_ptr<Book>），但需考虑生命周期管理与悬挂引用问题。\par
+- 可扩展为 Library 管理类，集中维护馆藏与借还逻辑，加入持久化（文件或 SQLite 数据库）与单元测试。\par
+\par
+\b 附录：代码与运行说明\b0\par
+1. 仓库地址： https://github.com/1123-99/Librarysystem\par
+2. 主要源码文件：book.h, book.cpp, student.h, student.cpp, main.cpp, CMakeLists.txt\par
+3. 编译命令示例：g++ -std=c++17 main.cpp book.cpp student.cpp -o library\par
+4. 运行截图：请在 Word 中插入运行控制台截图和断点调试截图（要求含时间信息）\par
+\par
+\pard\f0\fs18\par
+}
