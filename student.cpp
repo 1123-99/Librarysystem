@@ -20,7 +20,7 @@ bool Student::borrowBook(Book& book) {
     if (!book.isAvailable()) return false;
     book.setAvailable(false);
     // 保存一份副本到学生内部（组合）
-    borrowed_.push_back(book);
+    borrowed_.push_back(&book);
     std::cout << "Book copied into Student (composition): " << book.getTitle() << std::endl;
     return true;
 }
@@ -28,7 +28,7 @@ bool Student::borrowBook(Book& book) {
 bool Student::returnBook(Book& book) {
     const std::string& isbn = book.getISBN();
     auto it = std::find_if(borrowed_.begin(), borrowed_.end(),
-        [&isbn](const Book& b){ return b.getISBN() == isbn; });
+        [&isbn](const Book* b){ return b->getISBN() == isbn; });
     if (it == borrowed_.end()) return false;
     book.setAvailable(true);
     borrowed_.erase(it);
@@ -41,12 +41,12 @@ void Student::listBorrowed(std::ostream& os) const {
     os << "已借图书数量: " << borrowed_.size() << "\n";
     for (size_t i = 0; i < borrowed_.size(); ++i) {
         os << "---- 图书" << (i+1) << " ----\n";
-        borrowed_[i].showInfo(os);
+        borrowed_[i]->showInfo(os);
     }
     if (borrowed_.empty()) os << "（无）\n";
 }
 
 bool Student::hasBorrowedISBN(const std::string& isbn) const {
     return std::any_of(borrowed_.begin(), borrowed_.end(),
-        [&isbn](const Book& b){ return b.getISBN() == isbn; });
+        [&isbn](const Book* b){ return b->getISBN() == isbn; });
 }

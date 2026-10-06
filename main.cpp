@@ -1,8 +1,10 @@
+#include<windows.h>
 #include <iostream>
 #include "book.h"
 #include "student.h"
 
 int main() {
+    SetConsoleOutputCP(65001);
     std::cout << "=== Book 类与 Student 借书示例（含生命周期/拷贝/构造演示） ===\n\n";
 
     // 局部作用域用于演示对象在离开作用域时析构

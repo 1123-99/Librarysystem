@@ -11,7 +11,7 @@ private:
     std::string name_;
     std::string id_;
     // 组合：学生内部保存已借图书的副本
-    std::vector<Book> borrowed_;
+    std::vector<Book*> borrowed_;
 
 public:
     Student();
