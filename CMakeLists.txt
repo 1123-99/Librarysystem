@@ -8,6 +8,8 @@ add_executable(library
     main.cpp
     book.cpp
     student.cpp
+    resource.cpp
+    library.cpp
 )
 
 target_include_directories(library PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
