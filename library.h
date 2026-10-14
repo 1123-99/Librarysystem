@@ -9,9 +9,9 @@
 
 class Library {
 private:
-    std::vector<Resource*> resources_; // owner of resources
+    std::vector<Resource*> resources_; // 资源列表，负责管理所有资源的指针
     int nextId_;
-    // map student id -> vector of borrowed Resource* (duplicates allowed)
+    // 记录每个学生借了哪些资源：key是学生ID，Value是资源指针列表
     std::unordered_map<std::string, std::vector<Resource*>> borrowed_;
 
     Resource* findById(int id) const;
@@ -19,7 +19,7 @@ public:
     Library();
     ~Library();
 
-    // add a new resource (caller transfers ownership)
+    // 添加新资源。注意：调用者将资源的所有权交给Library，Library负责释放内存
     int addResource(Resource* res);
     bool increaseResource(int id, int n);
     bool decreaseResource(int id, int n);

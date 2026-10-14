@@ -56,7 +56,7 @@ bool Library::decreaseResource(int id, int n) {
 bool Library::deleteResource(int id) {
     Resource* r = findById(id);
     if (!r) return false;
-    // check borrowed records
+    // 检查该资源是否被借出，被借出的资源不允许删除
     for (const auto& kv : borrowed_) {
         for (Resource* br : kv.second) {
             if (br == r) {
@@ -65,7 +65,7 @@ bool Library::deleteResource(int id) {
             }
         }
     }
-    // remove from vector and delete
+    // 从资源列表中移除，并释放内存
     auto it = std::find(resources_.begin(), resources_.end(), r);
     if (it != resources_.end()) {
         resources_.erase(it);

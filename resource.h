@@ -20,7 +20,7 @@ public:
     void addCount(int n);
     bool reduceCount(int n);
 
-    // display resource specific info
+    // 显示资源特定信息
     virtual void displayInfo(std::ostream& os = std::cout) const = 0;
 };
 
