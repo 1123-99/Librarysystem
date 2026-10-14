@@ -1,3 +1,5 @@
+#define NOMINMAX
+#include<windows.h>
 #include <iostream>
 #include <string>
 #include <limits>
@@ -54,6 +56,7 @@ static void readLine(std::string &out) {
 }
 
 int main() {
+    SetConsoleOutputCP(65001);
     Library lib;
     int nextId = 1; // simple id generator
 

@@ -15,12 +15,25 @@ Resource* Library::findById(int id) const {
 
 int Library::addResource(Resource* res) {
     if (!res) return -1;
-    // assign id if not assigned
-    // we expect constructor of resource to accept id; but ensure uniqueness
-    res->addCount(0); // no-op
-    // set id if <=0? we assume resource created with id - ignore
-    // enforce unique id by assigning nextId_
-    // create new resource with proper id is tedious; instead set id via derived constructors
+    
+    if (res->getId() <= 0) {
+
+    }
+    bool idConflict = false;
+    for (const Resource* r : resources_) {
+        if (r->getId() == res->getId()) {
+            idConflict = true;
+            break;
+        }
+    }
+
+    if (idConflict) {
+        std::cerr << "Error: Duplicate resource ID" << res->getId() << ".Cannot add." << std::endl;
+        delete res;
+        return -1;
+    }
+    
+    
     resources_.push_back(res);
     return res->getId();
 }
