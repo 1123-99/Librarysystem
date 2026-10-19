@@ -3,7 +3,9 @@
 
 #include <string>
 #include <iostream>
+#include <memory>
 
+// Base class for all resources
 class Resource {
 protected:
     int id_;
@@ -20,8 +22,14 @@ public:
     void addCount(int n);
     bool reduceCount(int n);
 
-    // 显示资源特定信息
     virtual void displayInfo(std::ostream& os = std::cout) const = 0;
+
+    // Serialization: write a single-line representation (type|fields...)
+    virtual std::string serialize() const = 0;
+
+    // Factory: parse a line and return a resource instance
+    // Implemented in resource.cpp
+    static std::unique_ptr<Resource> deserialize(const std::string& line);
 };
 
 #endif // RESOURCE_H

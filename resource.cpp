@@ -9,9 +9,7 @@ int Resource::getId() const { return id_; }
 const std::string& Resource::getTitle() const { return title_; }
 int Resource::getCount() const { return count_; }
 
-void Resource::addCount(int n) {
-    if (n > 0) count_ += n;
-}
+void Resource::addCount(int n) { if (n > 0) count_ += n; }
 
 bool Resource::reduceCount(int n) {
     if (n <= 0) return false;

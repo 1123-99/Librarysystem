@@ -2,25 +2,24 @@
 #define LIBRARY_H
 
 #include <vector>
+#include <memory>
 #include <string>
 #include <unordered_map>
-#include <memory>
 #include "resource.h"
 
 class Library {
 private:
-    std::vector<Resource*> resources_; // 资源列表，负责管理所有资源的指针
+    std::vector<std::unique_ptr<Resource>> resources_; // owns resources
     int nextId_;
-    // 记录每个学生借了哪些资源：key是学生ID，Value是资源指针列表
-    std::unordered_map<std::string, std::vector<Resource*>> borrowed_;
+    // student id -> list of borrowed resource ids
+    std::unordered_map<std::string, std::vector<int>> borrowed_;
 
     Resource* findById(int id) const;
 public:
     Library();
     ~Library();
 
-    // 添加新资源。注意：调用者将资源的所有权交给Library，Library负责释放内存
-    int addResource(Resource* res);
+    int addResource(std::unique_ptr<Resource> res); // returns assigned id
     bool increaseResource(int id, int n);
     bool decreaseResource(int id, int n);
     bool deleteResource(int id);
@@ -29,6 +28,12 @@ public:
 
     bool borrowResource(const std::string& studentId, int id);
     bool returnResource(const std::string& studentId, int id);
+
+    // persistence
+    bool saveToFile(const std::string& filename) const;
+    bool loadFromFile(const std::string& filename);
+
+    void clear();
 };
 
 #endif // LIBRARY_H
